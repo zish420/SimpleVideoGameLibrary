@@ -1,0 +1,37 @@
+﻿@page "/videogames"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+<h3>VideoGames</h3>
+
+<button @onclick="AddVideoGame" class="btn btn-primary">Add Video Game</button>
+<br/>
+
+@if(games is null)
+{
+    <span>Loading Video Games...</span>
+}
+else
+{
+    <ul>
+        @foreach (var game in games)
+        {
+            <li>@game.Title - @game.Publisher- @game.ReleaseYear</li>
+        }
+    </ul>
+}
+
+@code {
+    List<VideoGame>? games;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Http.GetFromJsonAsync<List<VideoGame>>("api/videogame");
+        if (result != null)
+            games = result;
+    }
+
+    void AddVideoGame()
+    {
+        NavigationManager.NavigateTo("/videogame");
+    }
+}
